@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'widgets/code_challenge.dart';
 import 'models/challenge.dart';
 import 'models/server_verification.dart';
@@ -101,7 +101,10 @@ class AltchaWidgetState extends State<AltchaWidget> {
       }
       _log('challenge url: ${widget.challengeUrl}');
       final uri = Uri.parse(widget.challengeUrl!);
-      final response = await widget.httpClient.get(uri, headers: widget.httpHeaders);
+      final response = await widget.httpClient.get(
+        uri,
+        headers: widget.httpHeaders,
+      );
       _log('challenge response (${response.statusCode}): ${response.body}');
       if (response.statusCode != 200) {
         throw ServerException(response.statusCode, 'Failed to load challenge');
@@ -137,7 +140,8 @@ class AltchaWidgetState extends State<AltchaWidget> {
 
   Future<String?> _getTimezone() async {
     try {
-      return FlutterNativeTimezone.getLocalTimezone();
+      final timezone = await FlutterTimezone.getLocalTimezone();
+      return timezone.identifier;
     } catch (e) {
       _log('Could not get time zone: $e');
     }
