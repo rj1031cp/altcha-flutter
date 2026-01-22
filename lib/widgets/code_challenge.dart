@@ -35,7 +35,7 @@ class _AltchaCodeChallengeWidgetState extends State<AltchaCodeChallengeWidget> {
     if (_formKey.currentState?.validate() ?? false) {
       widget.onSubmit(_controller.text.trim());
     } else {
-      _inputFocusNode.requestFocus(); 
+      _inputFocusNode.requestFocus();
     }
   }
 
@@ -53,89 +53,97 @@ class _AltchaCodeChallengeWidgetState extends State<AltchaCodeChallengeWidget> {
     final imageBytes = base64Decode(widget.imageBase64.split(',').last);
 
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 300),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Image
-              Container(
-                width: double.infinity,
-                height: 80,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: colorScheme.outline, width: 1.0),
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                child: Image.memory(
-                  imageBytes,
-                  fit: BoxFit.none,
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 300),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Image
+                Container(
+                  width: double.infinity,
+                  height: 80,
                   alignment: Alignment.center,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Text('Failed to load image'),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: colorScheme.outline, width: 1.0),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Image.memory(
+                    imageBytes,
+                    fit: BoxFit.none,
+                    alignment: Alignment.center,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Text('Failed to load image'),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // Code Input Field
-              TextFormField(
-                key: const Key('code_input'),
-                controller: _controller,
-                focusNode: _inputFocusNode,
-                decoration: InputDecoration(
-                  labelText: localizations.text('enterCode'),
-                  border: OutlineInputBorder(),
+                // Code Input Field
+                TextFormField(
+                  key: const Key('code_input'),
+                  controller: _controller,
+                  focusNode: _inputFocusNode,
+                  decoration: InputDecoration(
+                    labelText: localizations.text('enterCode'),
+                    border: OutlineInputBorder(),
+                  ),
+                  textInputAction: TextInputAction.done,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return localizations.text('required');
+                    }
+                    if (widget.codeLength != null &&
+                        value.trim().length != widget.codeLength) {
+                      return localizations.text('incompleteCode');
+                    }
+                    return null;
+                  },
+                  onFieldSubmitted: (_) => _submit(),
                 ),
-                textInputAction: TextInputAction.done,
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return localizations.text('required');
-                  }
-                  if (widget.codeLength != null && value.trim().length != widget.codeLength) {
-                    return localizations.text('incompleteCode');
-                  }
-                  return null;
-                },
-                onFieldSubmitted: (_) => _submit(),
-              ),
-              const SizedBox(height: 12),
+                const SizedBox(height: 12),
 
-              // Audio and Reload Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (widget.audioUrl != null)
-                    AltchaAudioButtonWidget(
-                      log: widget.log,
-                      url: widget.audioUrl!,
+                // Audio and Reload Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (widget.audioUrl != null)
+                      AltchaAudioButtonWidget(
+                        log: widget.log,
+                        url: widget.audioUrl!,
+                      ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: widget.onReload,
+                      icon: const Icon(Icons.refresh),
+                      tooltip: localizations.text('reload'),
                     ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: widget.onReload,
-                    icon: const Icon(Icons.refresh),
-                    tooltip: localizations.text('reload'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // Submit Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colorScheme.primary,
-                    foregroundColor: colorScheme.onPrimary,
-                  ),
-                  onPressed: _submit,
-                  child: Text(localizations.text('verify')),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+
+                // Submit Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
+                    ),
+                    onPressed: _submit,
+                    child: Text(localizations.text('verify')),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
