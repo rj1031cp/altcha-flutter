@@ -53,7 +53,12 @@ class _AltchaCodeChallengeWidgetState extends State<AltchaCodeChallengeWidget> {
     final imageBytes = base64Decode(widget.imageBase64.split(',').last);
 
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.only(
+        top: 16,
+        left: 16,
+        right: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 300),
         child: Form(
