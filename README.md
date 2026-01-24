@@ -49,7 +49,7 @@ Or, if published on pub.dev:
 
 ```yaml
 dependencies:
-  altcha_widget: ^1.0.0
+  altcha_widget: ^1.1.0
 ```
 
 Then run:
