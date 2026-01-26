@@ -94,13 +94,14 @@ class _AltchaDemoPageState extends State<AltchaDemoPage> {
   final GlobalKey<AltchaWidgetState> _altchaKey = GlobalKey();
 
   final TextEditingController _challengeUrlController = TextEditingController(
-    text: 'http://127.0.0.1:3000/v1/challenge',
+    text: 'http://cp.local:8081/v1/challenge?apiKey=key_1jfi4j2ro00a0nsr8fr',
   );
   final TextEditingController _delayController = TextEditingController(
     text: '1000',
   );
 
-  String _challengeUrl = 'http://127.0.0.1:3000/v1/challenge';
+  String _challengeUrl =
+      'http://cp.local:8081/v1/challenge?apiKey=key_1jfi4j2ro00a0nsr8fr';
   int _delay = 1000;
 
   String? _verifiedValue;

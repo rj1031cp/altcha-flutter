@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:altcha_widget/localizations.dart';
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:http/http.dart' as http;
@@ -67,6 +68,11 @@ class _AltchaAudioButtonWidgetState extends State<AltchaAudioButtonWidget> {
         });
       }
     });
+  }
+
+  Future<void> _initAudioSession() async {
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.speech());
   }
 
   String _getExtensionFromUrl(Uri url) {
